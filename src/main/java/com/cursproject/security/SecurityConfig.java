@@ -12,6 +12,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 //import ru.cursproject.service.UserService;
 
+
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -24,20 +26,37 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.userService = userService;
     }
 
+     /*
+    Класс в Spring, отвечающий за безопасноть и роутинг. Здесь закладываются основы и правила переходов по страницам,
+     например, нельзя зайти в личный кабинет, не вводив пароль и т.д. Пароль шифруется и сравнивает с БД, основанной на
+     postgreSQL. Класс описывает конфигурацию.
+     */
+
+    //Шифровка
     @Bean
     public PasswordEncoder getPasswordEncoder() {
-        return new BCryptPasswordEncoder(8);
+        return new BCryptPasswordEncoder(10);
     }
 
+    //взаимодействия со страницей
+    //.disable - отключение csrf
+    //.permitAll - разрешение к страницам без процесса авторизации
+    //.antMatchers - базовые страницы
+    //.formlogin - форма заполнения логина
+    //.and() - security связка
+    //.loginPage - страница входа в аккаунт
+    //.failureURL - если что-то пошло не по плану
+    //.defaltSuccessURL - дефолтный адрес перехода страницы
+    // далее идут необходимые повторения под страницу logout
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()//Отключаем поддержку csrf
-                .authorizeRequests() //Запрос на вход
+        http.csrf().disable()
+                .authorizeRequests()
                 .antMatchers("/login", "/registration", "/")
-                .permitAll() //Какие страницы могут быть доступны без авторизации
+                .permitAll()
                 .and()
-                .formLogin() //Форма логина
-                .loginPage("/login")//путь до страницы логина
+                .formLogin()
+                .loginPage("/login")
                 .failureUrl("/login?error")
                 .defaultSuccessUrl("/", false)
                 .permitAll()
