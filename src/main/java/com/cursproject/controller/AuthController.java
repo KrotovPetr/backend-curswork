@@ -6,16 +6,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/auth")
+@RequestMapping("")
 public class AuthController {
 
     @GetMapping("/login")
     public String getLoginPage() {
-        return "login";
+        return "localhost:3000/login";
     }
 
-    @GetMapping("/success")
+    @GetMapping("/home")
     public String getSuccessPage() {
-        return "success";
+        return "localhost:3000/home";
     }
 }

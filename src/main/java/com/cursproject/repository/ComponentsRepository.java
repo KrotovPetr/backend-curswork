@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface ComponentRepository extends JpaRepository<Components, Long> {
+public interface ComponentsRepository extends JpaRepository<Components, Long> {
     Optional<Components> findByName(String name);
 }
