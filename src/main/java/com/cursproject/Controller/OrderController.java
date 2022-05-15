@@ -1,13 +1,14 @@
-package com.cursproject.rest;
+package com.cursproject.Controller;
 
 
 import java.util.List;
 
-import com.cursproject.Model.Order;
+import com.cursproject.Entity.Order;
 import com.cursproject.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,34 +22,34 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("")
+@RequestMapping("/")
 @CrossOrigin("*")
 public class OrderController {
 
     @Autowired
     private OrderRepository oRepo;
-
-    @GetMapping("/order")
+    @PreAuthorize("hasAuthority('USER')")
+    @GetMapping("order")
     public List<Order> getAllOrders() {
         return oRepo.findAll();
     }
-
-    @GetMapping("/order/{id}")
+    @PreAuthorize("hasAuthority('USER')")
+    @GetMapping("order/{id}")
     public Order getOrderById(@PathVariable Long id) {
         return oRepo.findById(id).get();
     }
-
-    @PostMapping("/order")
+    @PreAuthorize("hasAuthority('USER')")
+    @PostMapping("order")
     public Order saveOrderDetails(@RequestBody Order order) {
         return oRepo.save(order);
     }
-
-    @PutMapping("/order")
+    @PreAuthorize("hasAuthority('USER')")
+    @PutMapping("order")
     public Order updateOrder(@RequestBody Order order) {
         return oRepo.save(order);
     }
-
-    @DeleteMapping("/order/{id}")
+    @PreAuthorize("hasAuthority('USER')")
+    @DeleteMapping("order/{id}")
     public ResponseEntity<HttpStatus> deleteOrderById(@PathVariable Long id) {
         oRepo.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

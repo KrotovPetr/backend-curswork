@@ -1,6 +1,6 @@
 package com.cursproject.repository;
 
-import com.cursproject.Model.Components;
+import com.cursproject.Entity.Components;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

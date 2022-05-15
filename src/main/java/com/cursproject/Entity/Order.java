@@ -1,4 +1,4 @@
-package com.cursproject.Model;
+package com.cursproject.Entity;
 
 
 import lombok.*;
