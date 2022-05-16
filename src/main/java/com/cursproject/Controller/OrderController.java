@@ -39,6 +39,11 @@ public class OrderController {
         return oRepo.findById(id).get();
     }
     @PreAuthorize("hasAuthority('USER')")
+    @GetMapping("order/{email}")
+    public Order getOrderById(@PathVariable String email) {
+        return oRepo.findByEmail(email).get();
+    }
+    @PreAuthorize("hasAuthority('USER')")
     @PostMapping("order")
     public Order saveOrderDetails(@RequestBody Order order) {
         return oRepo.save(order);
