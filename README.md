@@ -7,15 +7,15 @@
 Spring Data JPA. В базе данных содержатся основные сущности, которые используются в приложении(Пользователь, Товар, Заказ).
 Пример структуры такой таблицы приведён ниже.
 
-![img.png](target/Images/img.png) 
+![image](https://user-images.githubusercontent.com/83280920/168467865-cf14b59e-1482-4e68-8ccd-1157b3c7b894.png)
 
 Для связи базы данных c сервером задействованы Repository сервисы, которые умеют выполнять поиск по 
 какому-либо параметру(Email, id и т.д.). Примеры таких репозиториев также приведены ниже.
 
 #### Пример интерфейса для товара
-![img_4.png](target/Images/img_4.png)
+![image](https://user-images.githubusercontent.com/83280920/168467875-0a01f312-8465-4884-a890-c14bdfd830a6.png)
 #### Пример интерфейса для заказа
-![img_3.png](target/Images/img_3.png)
+![image](https://user-images.githubusercontent.com/83280920/168467881-edc5c6be-ddcf-4e90-b3f9-e29a5a557076.png)
 
 ##Порядок взаимодействия c приложением
 
