@@ -1,5 +1,6 @@
 package com.cursproject.Entity;
 
+import com.cursproject.AuthException;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.Authentication;
@@ -10,7 +11,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-public class JwtAuthentication implements Authentication {
+public class JwtAuthentication implements Authentication  {
 
     private boolean authenticated;
     private String username;
