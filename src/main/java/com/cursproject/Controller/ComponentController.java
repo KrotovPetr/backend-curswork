@@ -33,25 +33,8 @@ public class ComponentController {
     public List<Components> getAllComponents() {
         return cRepo.findAll();
     }
-    @PreAuthorize("hasAuthority('USER')")
-    @GetMapping("components/{id}")
-    public Components getComponentById(@PathVariable Long id) {
-        return cRepo.findById(id).get();
-    }
-    @PreAuthorize("hasAuthority('USER')")
-    @PostMapping("components")
-    public Components saveComponentDetails(@RequestBody Components employee) {
-        return cRepo.save(employee);
-    }
-    @PreAuthorize("hasAuthority('USER')")
-    @PutMapping("components")
-    public Components updateComponent(@RequestBody Components employee) {
-        return cRepo.save(employee);
-    }
-    @PreAuthorize("hasAuthority('USER')")
-    @DeleteMapping("components/{id}")
-    public ResponseEntity<HttpStatus> deleteComponentsById(@PathVariable Long id) {
-        cRepo.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+
+
+
+
 }

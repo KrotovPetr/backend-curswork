@@ -30,7 +30,3 @@ public class UserService {
 
 }
 
-//{
-//        "login":"peter",
-//        "password":"1234"
-//        }
