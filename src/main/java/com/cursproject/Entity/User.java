@@ -34,23 +34,69 @@ package com.cursproject.Entity;
 //}
 //
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
 
+import javax.persistence.*;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
-@Getter
-@Setter
-@AllArgsConstructor
+@Entity
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Table(name = "users")
 public class User {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_id_seq")
+    @SequenceGenerator(name = "users_id_seq",
+            sequenceName = "users_id_seq",
+            allocationSize = 1
+    )
+    private Long id;
     private String login;
     private String password;
     private String firstName;
     private String lastName;
-    private Set<Role> roles;
+    private Role roles;
+    private String accessToken;
+    private String refreshToken;
+    @Column(name = "activity")
+    private boolean isActive;
+
+    @JsonManagedReference
+    @OneToMany(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            mappedBy = "user")
+    private List<Post> posts;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return new HashSet<>(role.getAuthorities());
+    }
+
+    @Override
+    public String getLogin() {
+        return login;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return isActive;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return isActive;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return isActive;
+    }
 
 }
