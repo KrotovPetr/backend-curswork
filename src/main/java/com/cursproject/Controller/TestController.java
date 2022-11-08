@@ -1,6 +1,5 @@
 package com.cursproject.Controller;
 
-import com.cursproject.AuthService;
 import com.cursproject.Entity.JwtAuthentication;
 import lombok.RequiredArgsConstructor;
 

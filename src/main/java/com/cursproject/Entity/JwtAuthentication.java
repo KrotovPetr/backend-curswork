@@ -1,6 +1,5 @@
 package com.cursproject.Entity;
 
-import com.cursproject.AuthException;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.Authentication;

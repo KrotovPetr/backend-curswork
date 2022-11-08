@@ -1,19 +1,23 @@
 package com.cursproject.Entity;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
-@RequiredArgsConstructor
 public enum Role implements GrantedAuthority {
-
     ADMIN("ADMIN"),
     USER("USER");
 
-    private final String vale;
+    private final String permissions;
+
+    Role(String permissions) {
+        this.permissions = String.valueOf(permissions);
+    }
+
+    public String getPermissions() {
+        return permissions;
+    }
 
     @Override
     public String getAuthority() {
-        return vale;
+        return permissions;
     }
-
 }
