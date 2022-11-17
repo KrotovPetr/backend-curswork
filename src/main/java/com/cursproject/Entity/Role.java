@@ -1,23 +1,27 @@
 package com.cursproject.Entity;
 
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-public enum Role implements GrantedAuthority {
-    ADMIN("ADMIN"),
-    USER("USER");
+import java.util.Set;
+import java.util.stream.Collectors;
 
-    private final String permissions;
+public enum Role {
+    USER(Set.of(Permission.USERS_PERMISSION)),
+    ADMIN(Set.of(Permission.ADMIN_PERMISSION));
 
-    Role(String permissions) {
-        this.permissions = String.valueOf(permissions);
+    private final Set<Permission> permissions;
+
+    Role(Set<Permission> permissions) {
+        this.permissions = permissions;
     }
 
-    public String getPermissions() {
+    public Set<Permission> getPermissions() {
         return permissions;
     }
 
-    @Override
-    public String getAuthority() {
-        return permissions;
+    public Set<SimpleGrantedAuthority> getAuthorities() {
+        return getPermissions().stream()
+                .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
+                .collect(Collectors.toSet());
     }
 }

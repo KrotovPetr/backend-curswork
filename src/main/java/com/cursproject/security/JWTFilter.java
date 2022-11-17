@@ -1,62 +1,42 @@
 package com.cursproject.security;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.JwtException;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
+import lombok.SneakyThrows;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
-@Slf4j
 @Component
 @AllArgsConstructor
-public class JWTFilter extends OncePerRequestFilter {
-    private JWTProvider provider;
-    private JWTConfigurer jwtConfig;
-    private UserDetailsService userDetailsService;
+public class JWTFilter extends GenericFilterBean {
+    private final JWTProvider jwtTokenProvider;
+    private final UserDetailsService userDetailsService;
 
+    @SneakyThrows
     @Override
-    protected void doFilterInternal(
-            HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
-
-        String token = request.getHeader(HttpHeaders.AUTHORIZATION);
-
-        if (token == null || !provider.validateJwtToken(token)) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-        token = token.replace(jwtConfig.getTokenPrefix(), "");
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) {
+        String token = jwtTokenProvider.resolveToken((HttpServletRequest) servletRequest);
         try {
-            String username = provider.getUsernameFromToken(token);
-            UserDetails user = userDetailsService.loadUserByUsername(username);
-            Authentication authentication =
-                    new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-        } catch (ExpiredJwtException expEx) {
-                log.error("Token expired", expEx);
-            } catch (UnsupportedJwtException unsEx) {
-                log.error("Unsupported jwt", unsEx);
-            } catch (MalformedJwtException mjEx) {
-                log.error("Malformed jwt", mjEx);
-            } catch (SignatureException sEx) {
-                log.error("Invalid signature", sEx);
-            } catch (Exception e) {
-                log.error("invalid token", e);
+            if (token != null && jwtTokenProvider.validateJwtToken(token)) {
+                UserDetails user = userDetailsService.loadUserByUsername(jwtTokenProvider.getUsernameFromToken(token));
+                Authentication authentication =
+                        new UsernamePasswordAuthenticationToken(user, "", user.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-        filterChain.doFilter(request, response);
+        } catch (JwtException e) {
+            SecurityContextHolder.clearContext();
+            throw new IllegalStateException(String.format("Токен %s невалиден", token));
+        }
+        filterChain.doFilter(servletRequest, servletResponse);
     }
-
-
 }

@@ -1,8 +1,7 @@
 package com.cursproject.service;
-
+import com.cursproject.DTO.IUserDTO;
 import com.cursproject.Entity.User;
 import com.cursproject.Exceptions.PasswordCheckException;
-import com.cursproject.DTO.IUserDTO;
 import com.cursproject.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,11 +38,11 @@ public class UserService implements UserDetailsService {
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("Find user with username {}", username);
-        if (userRepository.findByUsername(username).isEmpty()) {
+        if (userRepository.findByUsername(username) == null) {
             log.warn("There is no user with username - {}", username);
             throw new UsernameNotFoundException("Пользователя с таким именем не существует");
         }
-        return userRepository.findByUsername(username).get();
+        return userRepository.findByUsername(username);
     }
 
     @Transactional

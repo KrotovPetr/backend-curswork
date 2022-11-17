@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.crypto.SecretKey;
 
+
 @Getter
 @Configuration
 public class JWTConfigurer {

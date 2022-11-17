@@ -1,11 +1,10 @@
 package com.cursproject.Controller;
 
-import com.cursproject.DTO.AuthDTO;
-import com.cursproject.DTO.IUserDTO;
-import com.cursproject.DTO.UpdateUserDTO;
+import com.cursproject.DTO.*;
 import com.cursproject.Entity.User;
 import com.cursproject.Exceptions.DuplicateUsernameException;
 import com.cursproject.Exceptions.PasswordCheckException;
+import com.cursproject.Mapper.UserMapper;
 import com.cursproject.security.JWTProvider;
 import com.cursproject.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +46,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody @Valid IUserDTO userDTO) throws DuplicateUsernameException, PasswordCheckException {
+    public ResponseEntity<?> register(@RequestBody @Valid RegisterUserDTO userDTO) throws DuplicateUsernameException, PasswordCheckException {
         try {
             userService.loadUserByUsername(userDTO.getUsername());
             throw new DuplicateUsernameException("Данная почта уже используется для другого аккаунта");
@@ -65,7 +64,7 @@ public class AuthController {
         String username = request.getUsername();
         manager.authenticate(new UsernamePasswordAuthenticationToken(username, request.getPassword()));
         User user = (User) userService.loadUserByUsername(request.getUsername());
-        String token = jwtTokenProvider.createToken(username, user.getRole().name());
+        String token = jwtTokenProvider.generateToken(user);
         AuthResponseDTO response = AuthResponseDTO.builder()
                 .username(user.getUsername()).token(token)
                 .build();
@@ -77,7 +76,7 @@ public class AuthController {
             throws PasswordCheckException {
         String pass = userService.checkDTO(dto);
         String token = jwtTokenProvider.resolveToken(request);
-        String username = jwtTokenProvider.getUsername(token);
+        String username = jwtTokenProvider.getUsernameFromToken(token);
         User user = (User) userService.loadUserByUsername(username);
         userMapper.updateUserFromDto(dto, user);
         if (pass != null) {

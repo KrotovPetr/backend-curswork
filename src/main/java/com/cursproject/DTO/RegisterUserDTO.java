@@ -23,13 +23,11 @@ public class RegisterUserDTO implements IUserDTO {
     @NotBlank(message = "Фамилия не может быть пустой")
     @Size(max = 75, message = "Фамилия не может превышать 75 символов")
     private String surname;
-    @NotBlank(message = "Номер телефона не может отсутствовать")
-    @Size(min = 10, max = 10, message = "Номер телефона должен содержать 10 цифр")
-    private String phone;
+
 
     public User toUser() {
         return User.builder().username(username).password(password)
-                .name(name).surname(surname).phone(phone).isActive(true)
-                .rating(0).role(Role.USER).build();
+                .firstName(name).lastName(surname).isActive(true)
+                .roles(Role.USER).build();
     }
 }
