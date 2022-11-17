@@ -1,9 +1,10 @@
 package com.cursproject.config;
 
+import com.cursproject.Entity.Permission;
 import com.cursproject.security.JWTFilter;
 import com.cursproject.security.JwtAuthenticationEntryPoint;
 import com.cursproject.service.UserService;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,10 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
-
 @Configuration
-@AllArgsConstructor
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final PasswordEncoder passwordEncoder;
@@ -26,15 +24,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final JWTFilter jwtTokenFilter;
     private final UserService userService;
 
+    @Autowired
+    public WebSecurityConfig(JWTFilter filter, JwtAuthenticationEntryPoint entryPoint,
+                             PasswordEncoder passwordEncoder, UserService userService) {
+        this.jwtTokenFilter = filter;
+        this.jwtAuthenticationEntryPoint = entryPoint;
+        this.passwordEncoder = passwordEncoder;
+        this.userService = userService;
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
                 .authorizeRequests() //Запрос на вход
+                .antMatchers("/auth/**").permitAll()
+                .antMatchers("/admin/**").hasAuthority(Permission.ADMIN_PERMISSION.getPermission())
                 .anyRequest().authenticated()
                 .and().exceptionHandling()
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint);
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .and().sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }

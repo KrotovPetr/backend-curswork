@@ -4,8 +4,8 @@ import com.cursproject.Entity.Role;
 import com.cursproject.Entity.User;
 import lombok.Builder;
 import lombok.Getter;
-import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Getter
@@ -19,15 +19,15 @@ public class RegisterUserDTO implements IUserDTO {
     private String password;
     @NotBlank(message = "Имя не может быть пустым")
     @Size(max = 50, message = "Имя не может превышать 50 символов")
-    private String name;
+    private String firstName;
     @NotBlank(message = "Фамилия не может быть пустой")
     @Size(max = 75, message = "Фамилия не может превышать 75 символов")
-    private String surname;
+    private String lastName;
 
 
     public User toUser() {
         return User.builder().username(username).password(password)
-                .firstName(name).lastName(surname).isActive(true)
+                .firstName(firstName).lastName(lastName).isActive(true)
                 .roles(Role.USER).build();
     }
 }
