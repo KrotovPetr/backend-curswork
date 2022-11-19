@@ -1,5 +1,6 @@
 package com.cursproject.Mapper;
 
+import com.cursproject.DTO.UpdateComponentDTO;
 import com.cursproject.Entity.Components;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
@@ -11,5 +12,5 @@ import org.springframework.stereotype.Component;
 @Mapper(componentModel = "spring")
 public interface ComponentMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateСomponentFromDto(UpdateComponentDTO dto, @MappingTarget Components entity);
+    void updateComponentFromDto(UpdateComponentDTO dto, @MappingTarget Components entity);
 }
