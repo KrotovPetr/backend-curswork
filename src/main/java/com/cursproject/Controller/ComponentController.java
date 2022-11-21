@@ -51,17 +51,17 @@ public class ComponentController {
     public Components getOrderById(@PathVariable Long id) {
         return cRepo.findById(id).get();
     }
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("component")
     public Components saveOrderDetails(@RequestBody Components components) {
         return cRepo.save(components);
     }
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("component")
     public Components updateOrder(@RequestBody Components components) {
         return cRepo.save(components);
     }
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PatchMapping("component/{id}")
     public ResponseEntity<?> patchOrder(@PathVariable(name="id") long id, @RequestBody @Valid UpdateComponentDTO dto, HttpServletRequest request) throws WrongIdException {
 //        Components components = (Components) componentService.findById(id);
@@ -70,11 +70,11 @@ public class ComponentController {
         cRepo.save(components);
         return new ResponseEntity<>("Данные компонента обновлены", HttpStatus.OK);
     }
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("component/{id}")
-    public ResponseEntity<HttpStatus> deleteOrderById(@PathVariable Long id) {
+    public ResponseEntity<?> deleteOrderById(@PathVariable Long id) {
         cRepo.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("Данные компонента удалены",HttpStatus.NO_CONTENT);
     }
 }
 
