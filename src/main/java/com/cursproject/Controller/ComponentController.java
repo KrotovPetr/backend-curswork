@@ -6,11 +6,12 @@ import com.cursproject.Entity.Components;
 import com.cursproject.Exceptions.WrongIdException;
 import com.cursproject.Mapper.ComponentMapper;
 import com.cursproject.repository.ComponentsRepository;
+import com.cursproject.security.JWTProvider;
 import com.cursproject.service.ComponentService;
+import com.cursproject.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,45 +35,52 @@ import java.util.List;
 public class ComponentController {
     private final ComponentMapper componentMapper;
     private final ComponentService componentService;
+    private final JWTProvider provider;
+    private final UserService userService;
     @Autowired
-    public ComponentController(ComponentMapper componentMapper, ComponentService componentService) {
+    public ComponentController(ComponentMapper componentMapper, ComponentService componentService, JWTProvider provider, UserService userService) {
         this.componentMapper = componentMapper;
         this.componentService = componentService;
+        this.provider = provider;
+        this.userService = userService;
     }
     @Autowired
     private ComponentsRepository cRepo;
-    @PreAuthorize("hasAuthority('USER')")
+
     @GetMapping("component")
     public List<Components> getAllComponents() {
         return cRepo.findAll();
     }
-    @PreAuthorize("hasAuthority('USER')")
+
     @GetMapping("component/{id}")
-    public Components getOrderById(@PathVariable Long id) {
+    public Components getComponentById(@PathVariable Long id) {
         return cRepo.findById(id).get();
     }
-    @PreAuthorize("hasAuthority('ADMIN')")
+
     @PostMapping("component")
-    public Components saveOrderDetails(@RequestBody Components components) {
+    public Components saveComponentDetails(@RequestBody Components components, HttpServletRequest request) {
+        String user = provider.getUsernameFromToken(provider.resolveToken(request));
+        String role = userService.loadUserByUsername(user).getAuthorities().toString();
+        System.out.println(role);
         return cRepo.save(components);
     }
-    @PreAuthorize("hasAuthority('ADMIN')")
+
     @PutMapping("component")
-    public Components updateOrder(@RequestBody Components components) {
+    public Components updateComponent(@RequestBody Components components) {
         return cRepo.save(components);
     }
-    @PreAuthorize("hasAuthority('ADMIN')")
+
     @PatchMapping("component/{id}")
-    public ResponseEntity<?> patchOrder(@PathVariable(name="id") long id, @RequestBody @Valid UpdateComponentDTO dto, HttpServletRequest request) throws WrongIdException {
+    public ResponseEntity<?> patchComponent(@PathVariable(name="id") long id, @RequestBody @Valid UpdateComponentDTO dto, HttpServletRequest request) throws WrongIdException {
 //        Components components = (Components) componentService.findById(id);
         Components components = componentService.findById(id).orElseThrow(() -> new WrongIdException("Неправльный id"));
         componentMapper.updateComponentFromDto(dto, components);
         cRepo.save(components);
         return new ResponseEntity<>("Данные компонента обновлены", HttpStatus.OK);
     }
-    @PreAuthorize("hasAuthority('ADMIN')")
+
     @DeleteMapping("component/{id}")
-    public ResponseEntity<?> deleteOrderById(@PathVariable Long id) {
+    public ResponseEntity<?> deleteComponentById(@PathVariable Long id) {
         cRepo.deleteById(id);
         return new ResponseEntity<>("Данные компонента удалены",HttpStatus.NO_CONTENT);
     }

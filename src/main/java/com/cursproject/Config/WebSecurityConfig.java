@@ -16,6 +16,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static org.springframework.http.HttpMethod.DELETE;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.PATCH;
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.PUT;
+
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -38,7 +44,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests() //Запрос на вход
                 .antMatchers("/auth/**").permitAll()
-                .antMatchers("/admin/**").hasAuthority(Permission.ADMIN_PERMISSION.getPermission())
+                .antMatchers(POST, "/component/**").hasAuthority(Permission.ADMIN_PERMISSION.getPermission())
+                .antMatchers(GET, "/order/**").hasAuthority(Permission.ADMIN_PERMISSION.getPermission())
+                .antMatchers(PUT, "/component/**").hasAuthority(Permission.ADMIN_PERMISSION.getPermission())
+                .antMatchers(PATCH, "/component/**").hasAuthority(Permission.ADMIN_PERMISSION.getPermission())
+                .antMatchers(DELETE, "/component/**", "/order/**").hasAuthority(Permission.ADMIN_PERMISSION.getPermission())
                 .anyRequest().authenticated()
                 .and().exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
