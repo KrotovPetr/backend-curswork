@@ -1,9 +1,18 @@
 package com.cursproject.Entity;
 
 
-import lombok.*;
+import com.cursproject.DTO.GetOrdersDTO;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "orders")
@@ -23,4 +32,9 @@ public class Order {
     private String components;
     @Column(name = "number")
     private int number;
+
+    public GetOrdersDTO toDTO() {
+        return GetOrdersDTO.builder().id(this.id).price(this.price).email(this.email)
+                .components(this.components).number(this.number).build();
+    }
 }

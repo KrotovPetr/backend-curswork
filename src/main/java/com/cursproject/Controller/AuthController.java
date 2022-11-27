@@ -3,7 +3,7 @@ package com.cursproject.Controller;
 import com.cursproject.DTO.*;
 import com.cursproject.Entity.User;
 import com.cursproject.Exceptions.DuplicateUsernameException;
-import com.cursproject.Exceptions.PasswordCheckException;
+import com.cursproject.Exceptions.PasswordCheckFailureException;
 import com.cursproject.Mapper.UserMapper;
 import com.cursproject.security.JWTProvider;
 import com.cursproject.service.UserService;
@@ -46,7 +46,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody @Valid RegisterUserDTO userDTO) throws DuplicateUsernameException, PasswordCheckException {
+    public ResponseEntity<?> register(@RequestBody @Valid RegisterUserDTO userDTO) throws DuplicateUsernameException, PasswordCheckFailureException {
         try {
             userService.loadUserByUsername(userDTO.getUsername());
             throw new DuplicateUsernameException("Данная почта уже используется для другого аккаунта");
@@ -73,7 +73,7 @@ public class AuthController {
 
     @PostMapping("/edit")
     public ResponseEntity<?> editProfile(@RequestBody @Valid UpdateUserDTO dto, HttpServletRequest request)
-            throws PasswordCheckException {
+            throws PasswordCheckFailureException {
         String pass = userService.checkDTO(dto);
         String token = jwtTokenProvider.resolveToken(request);
         String username = jwtTokenProvider.getUsernameFromToken(token);
@@ -83,7 +83,7 @@ public class AuthController {
             user.setPassword(pass);
         }
         userService.update(user);
-        return new ResponseEntity<>("Данные вашего профиля обновлены", HttpStatus.OK);
+        return new ResponseEntity<>("Данные профиля обновлены", HttpStatus.OK);
     }
 
     @PostMapping("/logout")

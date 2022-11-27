@@ -3,7 +3,7 @@ package com.cursproject.Controller;
 
 import com.cursproject.DTO.UpdateComponentDTO;
 import com.cursproject.Entity.Components;
-import com.cursproject.Exceptions.WrongIdException;
+import com.cursproject.Exceptions.IdCheckFailureException;
 import com.cursproject.Mapper.ComponentMapper;
 import com.cursproject.repository.ComponentsRepository;
 import com.cursproject.security.JWTProvider;
@@ -71,9 +71,8 @@ public class ComponentController {
     }
 
     @PatchMapping("component/{id}")
-    public ResponseEntity<?> patchComponent(@PathVariable(name="id") long id, @RequestBody @Valid UpdateComponentDTO dto, HttpServletRequest request) throws WrongIdException {
-//        Components components = (Components) componentService.findById(id);
-        Components components = componentService.findById(id).orElseThrow(() -> new WrongIdException("Неправльный id"));
+    public ResponseEntity<?> patchComponent(@PathVariable(name="id") long id, @RequestBody @Valid UpdateComponentDTO dto, HttpServletRequest request) throws IdCheckFailureException {
+        Components components = componentService.findById(id).orElseThrow(() -> new IdCheckFailureException("Неправльный id"));
         componentMapper.updateComponentFromDto(dto, components);
         cRepo.save(components);
         return new ResponseEntity<>("Данные компонента обновлены", HttpStatus.OK);

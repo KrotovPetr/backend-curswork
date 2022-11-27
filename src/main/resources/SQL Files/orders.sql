@@ -3,10 +3,10 @@ create table orders
     id         bigserial
         constraint orders_pk
             primary key,
-    price      integer,
-    email      varchar(100),
-    components text,
-    number     integer
+    price      integer not null,
+    email      varchar(100) not null,
+    components text not null,
+    number     integer not null
 );
 
 alter table orders

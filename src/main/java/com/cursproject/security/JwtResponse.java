@@ -1,4 +1,4 @@
-package com.cursproject.Entity;
+package com.cursproject.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -27,22 +27,18 @@ public class OrderController {
 
     @Autowired
     private OrderRepository oRepo;
-    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("order")
     public List<Order> getAllOrders() {
         return oRepo.findAll();
     }
-    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("order/{id}")
     public Order getOrderById(@PathVariable Long id) {
         return oRepo.findById(id).get();
     }
-    @PreAuthorize("hasAuthority('USER')")
     @PostMapping("order")
     public Order saveOrderDetails(@RequestBody Order order) {
         return oRepo.save(order);
     }
-    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("order/{id}")
     public ResponseEntity<?> deleteOrderById(@PathVariable Long id) {
         oRepo.deleteById(id);

@@ -9,8 +9,8 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @Builder
 public class AuthDTO {
-    @NotBlank(message = "Почта (имя пользователя) не может быть пустой")
+    @NotBlank(message = "Должно иметь хотя бы 1 символ")
     private String username;
-    @NotBlank(message = "Пароль не может быть пустым")
+    @NotBlank(message = "Должен иметь хотя бы 1 символ")
     private String password;
 }

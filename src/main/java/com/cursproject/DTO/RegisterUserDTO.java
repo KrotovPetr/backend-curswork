@@ -11,17 +11,17 @@ import javax.validation.constraints.Size;
 @Getter
 @Builder
 public class RegisterUserDTO implements IUserDTO {
-    @NotBlank(message = "Почта (имя пользователя) не может быть пустой")
-    @Size(max = 50, message = "Почта не может превышать 50 символов")
+    @NotBlank(message = "Логин должен сожержать хотя бы 1 символ")
+    @Size(max = 50, message = "Превышен лимит в 50 символов")
     private String username;
     @NotBlank(message = "Пароль не может быть пустым")
-    @Size(max = 255, message = "Пароль не может превышать 255 символов")
+    @Size(max = 255, message = "Превышен лимит в 255 символов")
     private String password;
     @NotBlank(message = "Имя не может быть пустым")
-    @Size(max = 50, message = "Имя не может превышать 50 символов")
+    @Size(max = 50, message = "Превышен лимит в 50 символов")
     private String firstName;
     @NotBlank(message = "Фамилия не может быть пустой")
-    @Size(max = 75, message = "Фамилия не может превышать 75 символов")
+    @Size(max = 75, message = "Превышен лимит в 75 символов")
     private String lastName;
 
 

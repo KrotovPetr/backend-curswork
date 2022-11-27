@@ -9,14 +9,14 @@ import javax.validation.constraints.Size;
 public class UpdateComponentDTO {
     @Size(min = 1, max = 255, message = "Пароль не может отсутствовать или превышать 255 символов")
     private String name;
-    @Size(min = 1, max = 255, message = "Пароль не может отсутствовать или превышать 255 символов")
+    @Size(min = 1, max = 255, message = "Тип товара не может отсутствовать или превышать 255 символов")
     private String type;
     private int weight;
-    @Size(min = 1, max = 255, message = "Пароль не может отсутствовать или превышать 255 символов")
+    @Size(min = 1, max = 255, message = "Компания не может отсутствовать или превышать 255 символов")
     private String company;
     private int price;
     private int amount;
-    @Size(min = 1, max = 255, message = "Пароль не может отсутствовать или превышать 255 символов")
+    @Size(min = 1, message = "Изображение не может отсутствовать")
     private String image;
     private int count;
 }

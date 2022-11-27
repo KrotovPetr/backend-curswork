@@ -1,7 +1,7 @@
 package com.cursproject.service;
 import com.cursproject.DTO.IUserDTO;
 import com.cursproject.Entity.User;
-import com.cursproject.Exceptions.PasswordCheckException;
+import com.cursproject.Exceptions.PasswordCheckFailureException;
 import com.cursproject.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,14 +63,13 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public String checkDTO(IUserDTO dto) throws PasswordCheckException {
+    public String checkDTO(IUserDTO dto) throws PasswordCheckFailureException {
         if (dto.getPassword() != null) {
             String CHECK = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+)[a-zA-Z0-9_-]{8,}$";
             Pattern pattern = Pattern.compile(CHECK);
             Matcher matcher = pattern.matcher(dto.getPassword());
             if (!matcher.matches()) {
-                throw new PasswordCheckException("Пароль должен содержать как миниму одну строчную букву, " +
-                        "одну заглавную букву и одну цифру, а также быть не менне 8 символов в длину.");
+                throw new PasswordCheckFailureException("Пароль должен содержать 8 символов, включая нижний, верхний регистр и цифры");
             }
             return passwordEncoder.encode(dto.getPassword());
         }

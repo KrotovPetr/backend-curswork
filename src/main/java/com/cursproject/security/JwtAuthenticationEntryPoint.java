@@ -1,5 +1,7 @@
 package com.cursproject.security;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -18,5 +20,13 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
                          AuthenticationException authException)
             throws IOException {
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, HttpStatus.UNAUTHORIZED.toString());
+    }
+
+    @Getter
+    @Setter
+    public static class RefreshJwtRequest {
+
+        public String refreshToken;
+
     }
 }

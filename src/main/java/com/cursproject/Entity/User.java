@@ -1,6 +1,7 @@
 package com.cursproject.Entity;
 
 
+import com.cursproject.DTO.GetUsersDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -72,5 +73,11 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return isActive;
+    }
+
+    public GetUsersDTO toDTO() {
+        return GetUsersDTO.builder().id(this.id).username(this.username).password(this.password)
+                .first_name(this.firstName).last_name(this.lastName)
+                .role(this.roles).isActive(this.isActive).build();
     }
 }
